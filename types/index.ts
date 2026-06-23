@@ -16,7 +16,7 @@ export type TSource = (typeof SOURCES)[number]
 
 export type TStatus = (typeof STATUSES)[number]
 
-export interface TPaymentEvent {
+export type TPaymentEvent = {
   eventId: string
   timestamp: string
   country: string
