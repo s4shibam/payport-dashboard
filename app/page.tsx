@@ -1,12 +1,7 @@
-import { Button } from '@/components/ui/button'
+import { redirect } from 'next/navigation'
 
 const Home = () => {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen gap-2">
-      <p className="text-2xl font-bold">Hello World</p>
-      <Button>Button</Button>
-    </div>
-  )
+  redirect('/dashboard')
 }
 
 export default Home
