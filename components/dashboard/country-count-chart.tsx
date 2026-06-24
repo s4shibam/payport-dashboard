@@ -87,7 +87,7 @@ export const CountryCountChart = ({ data }: TCountryCountChartProps) => {
                     className="size-2.5 rounded-full shrink-0"
                     style={{ background: d.fill }}
                   />
-                  <span className="text-xs font-medium text-foreground shrink-0">
+                  <span className="text-xs font-medium text-foreground shrink-0 w-16 truncate">
                     {d.country}
                   </span>
                   <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden min-w-0">
@@ -134,9 +134,7 @@ const CustomTooltip = ({ active, payload }: TTooltipProps) => {
       <p className="text-muted-foreground">
         Total: <span className="font-medium text-foreground">{d.count}</span>
       </p>
-      <p className="text-emerald-600 dark:text-emerald-400">
-        Success: {d.success}
-      </p>
+      <p className="text-emerald-600">Success: {d.success}</p>
       <p className="text-red-500">Failed: {d.failed}</p>
     </div>
   )
