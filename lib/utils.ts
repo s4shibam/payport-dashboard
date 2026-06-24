@@ -41,7 +41,18 @@ export const formatTransactionDateTime = (iso: string): string => {
   return `${date}, ${time}`
 }
 
+export const formatCompactNumber = (n: number): string =>
+  new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(n)
+
 export const formatAmount = (amount: number, currency: string): string => {
+  if (!currency) {
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(
+      amount
+    )
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
