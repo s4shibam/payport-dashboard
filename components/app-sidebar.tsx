@@ -68,7 +68,7 @@ export const AppSidebar = () => {
       </SidebarContent>
 
       <SidebarFooter className="pb-4">
-        <SidebarSeparator className="mb-2" />
+        <SidebarSeparator className="mb-2 mx-0" />
         <SidebarMenu className="gap-1">
           <SidebarMenuItem>
             <SidebarMenuButton>

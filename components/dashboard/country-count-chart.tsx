@@ -9,16 +9,15 @@ export type TCountryCountChartProps = {
   data: { country: string; success: number; failed: number }[]
 }
 
-const COLORS = [
-  'hsl(210 85% 60%)',
-  'hsl(40 98% 58%)',
-  'hsl(130 61% 48%)',
-  'hsl(340 82% 60%)',
-  'hsl(270 72% 60%)',
-  'hsl(0 82% 60%)',
-  'hsl(195 76% 66%)',
-  'hsl(55 93% 60%)',
-]
+const COUNTRY_COLORS: Record<string, string> = {
+  Canada: 'hsl(0 100% 42%)',
+  GB: 'hsl(348 72% 40%)',
+  US: 'hsl(214 68% 40%)',
+  Australia: 'hsl(46 100% 47%)',
+  UAE: 'hsl(145 62% 36%)',
+  Germany: 'hsl(0 0% 22%)',
+  India: 'hsl(28 100% 52%)',
+}
 
 type TChartRow = {
   country: string
@@ -34,12 +33,12 @@ const CountryCountChartComponent = ({ data }: TCountryCountChartProps) => {
       data
         .map((d) => ({ ...d, count: d.success + d.failed }))
         .sort((a, b) => b.count - a.count)
-        .map((d, i) => ({
+        .map((d) => ({
           country: d.country,
           count: d.count,
           success: d.success,
           failed: d.failed,
-          fill: COLORS[i % COLORS.length],
+          fill: COUNTRY_COLORS[d.country] ?? 'hsl(0 0% 70%)',
         })),
     [data]
   )

@@ -15,15 +15,15 @@ import {
   YAxis,
 } from 'recharts'
 
-const BAR_COLORS = [
-  'hsl(220 80% 55%)',
-  'hsl(20 90% 58%)',
-  'hsl(140 65% 48%)',
-  'hsl(0 70% 62%)',
-  'hsl(270 65% 58%)',
-  'hsl(45 92% 60%)',
-  'hsl(320 60% 60%)',
-]
+const METHOD_COLORS: Record<string, string> = {
+  CARD: 'hsl(220 65% 55%)',
+  APPLE_PAY: 'hsl(0 0% 18%)',
+  GOOGLE_PAY: 'hsl(4 78% 52%)',
+  KLARNA: 'hsl(338 80% 65%)',
+  AFTERPAY: 'hsl(158 68% 38%)',
+  PAYPAL: 'hsl(208 100% 30%)',
+  CARD_INSTALLMENT: 'hsl(38 88% 52%)',
+}
 
 export type TPaymentMethodChartProps = {
   data: {
@@ -35,11 +35,11 @@ export type TPaymentMethodChartProps = {
 const PaymentMethodChartComponent = ({ data }: TPaymentMethodChartProps) => {
   const chartData = useMemo(
     () =>
-      data.map((d, i) => ({
+      data.map((d) => ({
         ...d,
         label: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
         shortLabel: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
-        fill: BAR_COLORS[i % BAR_COLORS.length],
+        fill: METHOD_COLORS[d.method] ?? 'hsl(0 0% 70%)',
       })),
     [data]
   )
