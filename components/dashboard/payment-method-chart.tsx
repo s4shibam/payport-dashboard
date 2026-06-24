@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PAYMENT_METHOD_MAP } from '@/lib/constants'
 import type { TPaymentMethod } from '@/types'
 import { ChartColumnBig } from 'lucide-react'
+import { memo, useMemo } from 'react'
 import {
   Bar,
   BarChart,
@@ -31,13 +32,17 @@ export type TPaymentMethodChartProps = {
   }[]
 }
 
-export const PaymentMethodChart = ({ data }: TPaymentMethodChartProps) => {
-  const chartData = data.map((d, i) => ({
-    ...d,
-    label: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
-    shortLabel: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
-    fill: BAR_COLORS[i % BAR_COLORS.length],
-  }))
+const PaymentMethodChartComponent = ({ data }: TPaymentMethodChartProps) => {
+  const chartData = useMemo(
+    () =>
+      data.map((d, i) => ({
+        ...d,
+        label: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
+        shortLabel: PAYMENT_METHOD_MAP[d.method as TPaymentMethod] ?? d.method,
+        fill: BAR_COLORS[i % BAR_COLORS.length],
+      })),
+    [data]
+  )
 
   return (
     <Card className="border-border/60 shadow-none h-full flex flex-col py-0">
@@ -92,6 +97,8 @@ export const PaymentMethodChart = ({ data }: TPaymentMethodChartProps) => {
     </Card>
   )
 }
+
+export const PaymentMethodChart = memo(PaymentMethodChartComponent)
 
 type TCustomTooltipProps = {
   active?: boolean

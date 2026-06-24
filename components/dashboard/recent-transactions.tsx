@@ -2,13 +2,14 @@ import { PAYMENT_METHOD_MAP, SOURCE_MAP } from '@/lib/constants'
 import { cn, formatAmount, formatTransactionDateTime } from '@/lib/utils'
 import { TPaymentEvent } from '@/types'
 import { ReceiptText } from 'lucide-react'
+import { memo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
 type TRecentTransactionsProps = {
   events: TPaymentEvent[]
 }
 
-export const RecentTransactions = ({ events }: TRecentTransactionsProps) => {
+const RecentTransactionsComponent = ({ events }: TRecentTransactionsProps) => {
   return (
     <Card className="border-border/60 shadow-none h-full flex flex-col py-0">
       <CardHeader className="pb-3 pt-5 px-5">
@@ -37,12 +38,14 @@ export const RecentTransactions = ({ events }: TRecentTransactionsProps) => {
   )
 }
 
+export const RecentTransactions = memo(RecentTransactionsComponent)
+
 type TTransactionRowProps = {
   event: TPaymentEvent
   first: boolean
 }
 
-const TransactionRow = ({ event, first }: TTransactionRowProps) => {
+const TransactionRowComponent = ({ event, first }: TTransactionRowProps) => {
   const isSuccess = event.status === 'success'
 
   return (
@@ -91,3 +94,5 @@ const TransactionRow = ({ event, first }: TTransactionRowProps) => {
     </div>
   )
 }
+
+const TransactionRow = memo(TransactionRowComponent)

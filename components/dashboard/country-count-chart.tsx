@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartPie } from 'lucide-react'
+import { memo, useMemo } from 'react'
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 export type TCountryCountChartProps = {
@@ -27,17 +28,21 @@ type TChartRow = {
   fill: string
 }
 
-export const CountryCountChart = ({ data }: TCountryCountChartProps) => {
-  const chartData: TChartRow[] = data
-    .map((d) => ({ ...d, count: d.success + d.failed }))
-    .sort((a, b) => b.count - a.count)
-    .map((d, i) => ({
-      country: d.country,
-      count: d.count,
-      success: d.success,
-      failed: d.failed,
-      fill: COLORS[i % COLORS.length],
-    }))
+const CountryCountChartComponent = ({ data }: TCountryCountChartProps) => {
+  const chartData: TChartRow[] = useMemo(
+    () =>
+      data
+        .map((d) => ({ ...d, count: d.success + d.failed }))
+        .sort((a, b) => b.count - a.count)
+        .map((d, i) => ({
+          country: d.country,
+          count: d.count,
+          success: d.success,
+          failed: d.failed,
+          fill: COLORS[i % COLORS.length],
+        })),
+    [data]
+  )
 
   return (
     <Card className="border-border/60 shadow-none h-full flex flex-col py-0">
@@ -112,6 +117,8 @@ export const CountryCountChart = ({ data }: TCountryCountChartProps) => {
     </Card>
   )
 }
+
+export const CountryCountChart = memo(CountryCountChartComponent)
 
 type TTooltipProps = {
   active?: boolean

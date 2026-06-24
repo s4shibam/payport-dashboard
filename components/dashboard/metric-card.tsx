@@ -6,8 +6,9 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { Info } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { Info } from 'lucide-react'
+import { memo } from 'react'
 
 type TMetricCardProps = {
   title: string
@@ -17,7 +18,7 @@ type TMetricCardProps = {
   info?: string
 }
 
-export const MetricCard = ({
+const MetricCardComponent = ({
   title,
   value,
   icon: Icon,
@@ -65,3 +66,5 @@ export const MetricCard = ({
     </Card>
   )
 }
+
+export const MetricCard = memo(MetricCardComponent)
