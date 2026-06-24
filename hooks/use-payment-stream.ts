@@ -48,6 +48,7 @@ export const usePaymentStream = () => {
   >({})
   const recentEventsRef = useRef<TPaymentEvent[]>([])
   const largestSuccessTxnRef = useRef<TPaymentEvent | null>(null)
+  const throttleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [stats, setStats] = useState<TDashboardStats>(INITIAL_STATS)
 
@@ -119,37 +120,38 @@ export const usePaymentStream = () => {
           failed: prev.failed + (payment.status === 'failed' ? 1 : 0),
         }
 
-        recentEventsRef.current = [payment, ...recentEventsRef.current].slice(
-          0,
-          MAX_RECENT
-        )
+        recentEventsRef.current.unshift(payment)
+        if (recentEventsRef.current.length > MAX_RECENT) {
+          recentEventsRef.current.length = MAX_RECENT
+        }
 
-        const total = totalCountRef.current
-        const volume = totalVolumeRef.current
-
-        setStats((prev) => ({
-          ...prev,
-          recentEvents: recentEventsRef.current,
-          totalVolume: volume,
-          totalTransactions: total,
-          successRate: total > 0 ? (successCountRef.current / total) * 100 : 0,
-          avgTxnValue: total > 0 ? volume / total : 0,
-          largestSuccessTxn: largestSuccessTxnRef.current,
-          paymentMethodStats: Object.entries(methodCountRef.current).map(
-            ([method, count]) => ({
-              method: method as TPaymentEvent['paymentMethod'],
-              count,
-            })
-          ),
-          countryStats: Object.entries(countryMapRef.current).map(
-            ([country, s]) => ({
-              country,
-              ...s,
-            })
-          ),
-          status: 'live',
-          lastUpdatedAt: new Date(),
-        }))
+        if (!throttleTimerRef.current) {
+          throttleTimerRef.current = setTimeout(() => {
+            throttleTimerRef.current = null
+            const total = totalCountRef.current
+            const volume = totalVolumeRef.current
+            setStats((prev) => ({
+              ...prev,
+              recentEvents: [...recentEventsRef.current],
+              totalVolume: volume,
+              totalTransactions: total,
+              successRate:
+                total > 0 ? (successCountRef.current / total) * 100 : 0,
+              avgTxnValue: total > 0 ? volume / total : 0,
+              largestSuccessTxn: largestSuccessTxnRef.current,
+              paymentMethodStats: Object.entries(methodCountRef.current).map(
+                ([method, count]) => ({
+                  method: method as TPaymentEvent['paymentMethod'],
+                  count,
+                })
+              ),
+              countryStats: Object.entries(countryMapRef.current).map(
+                ([country, s]) => ({ country, ...s })
+              ),
+              lastUpdatedAt: new Date(),
+            }))
+          }, 1000)
+        }
       }
 
       es.onerror = () => {
@@ -174,6 +176,7 @@ export const usePaymentStream = () => {
       cancelled = true
       es?.close()
       if (timeoutId) clearTimeout(timeoutId)
+      if (throttleTimerRef.current) clearTimeout(throttleTimerRef.current)
     }
   }, [])
 
